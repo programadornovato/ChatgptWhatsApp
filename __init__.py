@@ -65,9 +65,21 @@ def webhook_whatsapp():
             "(mensaje_recibido,mensaje_enviado,id_wa      ,timestamp_wa   ,telefono_wa) VALUES "+
             "('"+mensaje+"'   ,'"+respuesta+"','"+idWA+"' ,'"+timestamp+"','"+telefonoCliente+"');")
             mycursor.execute(sql)
-            mydb.commit()        #RETORNAMOS EL STATUS EN UN JSON
+            mydb.commit()        
+            enviar(telefonoCliente,respuesta)
         #RETORNAMOS EL STATUS EN UN JSON
         return jsonify({"status": "success"}, 200)
+def enviar(telefonoRecibe,respuesta):
+  from heyoo import WhatsApp
+  #TOKEN DE ACCESO DE FACEBOOK
+  token='EAALDlRZBLBD4BAGIFXLcPuwwgkXMZAnCOAuvPTXRBPbi4tKavrq9PmCFuWfMvmoBHkjeKghBQhs0AExdK3Ru5NCXfWsDaIvUuVAZBDLNtKmom0pwSkA9LhUJMYrLVYTLhlWPPjg9iRuOBSpKKr7oExDHwC385UxJZCwFH2qxadMfqKQDAMMngReZBNvyJ3rLFmiOVB6xZBrwZDZD'
+  #IDENTIFICADOR DE NÚMERO DE TELÉFONO
+  idNumeroTeléfono='116907067953774'
+  #INICIALIZAMOS ENVIO DE MENSAJES
+  mensajeWa=WhatsApp(token,idNumeroTeléfono)
+  telefonoRecibe=telefonoRecibe.replace("521","52")
+  #ENVIAMOS UN MENSAJE DE TEXTO
+  mensajeWa.send_message(respuesta,telefonoRecibe)
 #INICIAMSO FLASK
 if __name__ == "__main__":
   app.run(debug=True)
